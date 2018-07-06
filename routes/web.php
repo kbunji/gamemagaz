@@ -72,3 +72,11 @@ Route::group(['prefix' => 'admin/orders', 'middleware' => ['auth', 'adminOnly']]
     Route::get('/', 'OrderController@all')->name('order.all');
     Route::get('/details/{orderId}', 'OrderController@details')->name('order.details');
 });
+
+// orders notifications for admin
+Route::group(['prefix' => 'admin/notifications', 'middleware' => ['auth', 'adminOnly']], function () {
+    Route::get('/', 'OrderNotificationController@all')->name('notification.manager');
+    Route::get('/add', 'OrderNotificationController@add')->name('notification.add');
+    Route::post('/store', 'OrderNotificationController@store')->name('notification.store');
+    Route::get('/delete/{notificationId}', 'OrderNotificationController@delete')->name('notification.delete');
+});

@@ -46,9 +46,10 @@
                     </li>
                     <li class="nav-list__item"><a href="{{ route('order.all') }}"
                                                   class="nav-list__item__link">Заказы</a></li>
-                    <li class="nav-list__item"><a href="" class="nav-list__item__link">Уведомления</a></li>
                     <li class="nav-list__item"><a href="{{ route('post.manager') }}"
                                                   class="nav-list__item__link">Новости</a>
+                    <li class="nav-list__item"><a href="{{ route('notification.manager') }}"
+                                                  class="nav-list__item__link">Уведомления</a>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -104,6 +105,8 @@
                                 Управление категориями
                             @elseif($title == 5)
                                 Просмотр заказов
+                            @elseif($title == 6)
+                                Уведомления
                             @endif
                         </div>
                     </div>

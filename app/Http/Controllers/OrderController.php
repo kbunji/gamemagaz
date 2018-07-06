@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\OrderClosedEvent;
 use App\Order;
 use App\OrderDetail;
 use App\Product;
@@ -87,6 +88,7 @@ class OrderController extends Controller
     {
         $data = $this->getData();
         Order::closeActiveOrder($orderId);
+        event(new OrderClosedEvent($orderId));
         return view('order.my')->with($data);
     }
 

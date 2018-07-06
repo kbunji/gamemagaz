@@ -1,8 +1,8 @@
 @extends('admin.app')
 
 @section('main-content')
-    <li class="nav-list__item"><a href="{{ route('category.create') }}"
-                                  class="nav-list__item__link">Создать новую категорию</a></li>
+    <p class="nav-list__item"><a href="{{ route('category.create') }}"
+                                  class="nav-list__item__link">Создать новую категорию</a></p>
     <table class="table">
         <thead>
         <tr>

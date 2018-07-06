@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Product;
-use Illuminate\Support\Facades\Auth;
 
 class WebController extends Controller
 {
