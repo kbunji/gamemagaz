@@ -44,9 +44,10 @@
                                                   class="nav-list__item__link">Категории</a></li>
                     <li class="nav-list__item"><a href="{{ route('product.manager') }}" class="nav-list__item__link">Товары</a>
                     </li>
-                    <li class="nav-list__item"><a href="{{ route('order.all') }}" class="nav-list__item__link">Заказы</a></li>
+                    <li class="nav-list__item"><a href="{{ route('order.all') }}"
+                                                  class="nav-list__item__link">Заказы</a></li>
                     <li class="nav-list__item"><a href="" class="nav-list__item__link">Уведомления</a></li>
-                    <li class="nav-list__item"><a href="{{ route('post.all') }}"
+                    <li class="nav-list__item"><a href="{{ route('post.manager') }}"
                                                   class="nav-list__item__link">Новости</a>
                 </ul>
 
@@ -97,8 +98,8 @@
                                 Админ панель
                             @elseif($title == 2)
                                 Управление товарами
-                                {{--@elseif($title == 3)--}}
-                                {{--Новости--}}
+                            @elseif($title == 3)
+                                Новости
                             @elseif($title == 4)
                                 Управление категориями
                             @elseif($title == 5)

@@ -48,6 +48,16 @@ Route::group(['prefix' => 'admin/products', 'middleware' => ['auth', 'adminOnly'
     Route::get('/delete/{productId}', 'ProductController@delete')->name('product.delete');
 });
 
+// posts(news) manager
+Route::group(['prefix' => 'admin/posts', 'middleware' => ['auth', 'adminOnly']], function () {
+    Route::get('/', 'PostController@manager')->name('post.manager');
+    Route::get('/create', 'PostController@create')->name('post.create');
+    Route::get('/edit/{postId}', 'PostController@edit')->name('post.edit');
+    Route::get('/delete/{postId}', 'PostController@delete')->name('post.delete');
+    Route::post('/update/{postId}', 'PostController@update')->name('post.update');
+    Route::post('/store', 'PostController@store')->name('post.store');
+});
+
 // client orders
 Route::group(['prefix' => 'order', 'middleware' => ['auth']], function () {
     Route::get('/manager/{productId}', 'OrderController@manager')->name('order.manager');
