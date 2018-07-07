@@ -140,10 +140,15 @@
                     </div>
                     <div class="content-head__search-block">
                         <div class="search-container">
-                            <form class="search-container__form">
-                                <input type="text" class="search-container__form__input">
+                            <form action="{{ route('product.search') }}" class="search-container__form" method="get">
+                                <input type="text" class="search-container__form__input" name="search" value="">
                                 <button class="search-container__form__btn">search</button>
                             </form>
+                            @if ($errors->has('search'))
+                                <p style="color: red" role="alert">
+                                    <strong>{{ $errors->first('search') }}</strong>
+                                </p>
+                            @endif
                         </div>
                     </div>
                 </div>

@@ -19,6 +19,8 @@ Route::get('/', 'WebController@index')->name('web.index');
 
 Auth::routes();
 
+Route::get('/search', 'ProductController@search')->name('product.search');
+
 Route::get('/product/get/{productId}', 'ProductController@get')->name('product.get');
 Route::get('/post/get/{postId}', 'PostController@get')->name('post.get');
 Route::get('/post/all', 'PostController@all')->name('post.all');

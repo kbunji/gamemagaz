@@ -95,6 +95,23 @@ class ProductController extends Controller
         return redirect()->route('product.manager');
     }
 
+    protected function checkSearchRequest(Request $request)
+    {
+        $this->validate($request, [
+            'search' => 'string|min:3'
+        ]);
+    }
+
+    public function search(Request $request)
+    {
+        $data = $this->getData();
+        $this->checkSearchRequest($request);
+        $value = $request->get('search');
+        $searchProducts = Product::searchProduct($value);
+        $data['searchProducts'] = $searchProducts;
+        return view('product.search')->with($data);
+    }
+
 
     protected function getTitleCode()
     {

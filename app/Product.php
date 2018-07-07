@@ -85,4 +85,10 @@ class Product extends Model
         $product = DB::table('products')->where('id', $productId)->first();
         return $product;
     }
+
+    public static function searchProduct($value)
+    {
+        $products = Product::where('name', 'LIKE', "%$value%")->paginate(6);
+        return $products;
+    }
 }
