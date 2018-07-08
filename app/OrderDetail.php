@@ -4,7 +4,6 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
-use Symfony\Component\Console\Helper\Table;
 
 class OrderDetail extends Model
 {
@@ -13,7 +12,7 @@ class OrderDetail extends Model
     public static function countOrderProducts($userId)
     {
         $count = 0;
-        $order = Order::getUserActiveOrder();
+        $order = Order::getUserActiveOrder($userId);
         if ($order) {
             $count = DB::table('order_details')
                 ->where('order_id', $order->id)
@@ -31,22 +30,22 @@ class OrderDetail extends Model
         return $details;
     }
 
-    public static function createOrderDetails($request, $order = null)
+    public static function createOrderDetails($data, $order)
     {
         $orderDetail = new OrderDetail();
-        $orderDetail->quantity = $request->get('quantity');
-        $orderDetail->product_id = $request->get('productId');
+        $orderDetail->quantity = $data['quantity'];
+        $orderDetail->product_id = $data['productId'];
         $orderDetail->order_id = $order->id;
         $orderDetail->created_at = \Carbon\Carbon::now('Asia/Almaty')->toDateTimeString();
         return $orderDetail->save();
     }
 
-    public static function addOrderDetails($request)
+    public static function addOrderDetails($data)
     {
         $orderDetail = new OrderDetail();
-        $orderDetail->quantity = $request->get('quantity');
-        $orderDetail->product_id = $request->get('productId');
-        $orderDetail->order_id = $request->get('orderId');
+        $orderDetail->quantity = $data['quantity'];
+        $orderDetail->product_id = $data['productId'];
+        $orderDetail->order_id = $data['orderId'];
         $orderDetail->created_at = \Carbon\Carbon::now('Asia/Almaty')->toDateTimeString();
         return $orderDetail->save();
     }

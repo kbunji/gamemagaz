@@ -5,35 +5,35 @@ namespace App\Http\Controllers;
 use App\OrderNotification;
 use Illuminate\Http\Request;
 
-class OrderNotificationController extends Controller
+class OrderNotificationController extends MainDataController
 {
-    use MainData;
     const TITLE_CODE = 6;
 
     public function all()
     {
         $data = $this->getData();
         $data['notifications'] = OrderNotification::all();
-        return view('notification.manager')->with($data);
+        return view('notification.manager', $data);
     }
 
     public function add()
     {
         $data = $this->getData();
-        return view('notification.add')->with($data);
+        return view('notification.add', $data);
     }
 
     protected function checkStoreRequest($request)
     {
         $this->validate($request, [
-            'email' => 'required'
+            'email' => 'required|unique:order_notifications'
         ]);
     }
 
     public function store(Request $request)
     {
         $this->checkStoreRequest($request);
-        OrderNotification::addEmail($request);
+        $email = $request->get('email');
+        OrderNotification::addEmail($email);
         return redirect()->route('notification.manager');
     }
 
@@ -41,10 +41,5 @@ class OrderNotificationController extends Controller
     {
         OrderNotification::destroy($notificationId);
         return redirect()->route('notification.manager');
-    }
-
-    protected function getTitleCode()
-    {
-        return self::TITLE_CODE;
     }
 }

@@ -2,22 +2,22 @@
 /**
  * Created by PhpStorm.
  * User: Bunji
- * Date: 04.07.2018
- * Time: 15:37
+ * Date: 08.07.2018
+ * Time: 18:41
  */
 
 namespace App\Http\Controllers;
 
 
 use App\Category;
-use App\Order;
 use App\OrderDetail;
 use App\Post;
 use App\Product;
 use Illuminate\Support\Facades\Auth;
 
-trait MainData
+abstract class MainDataController extends Controller
 {
+    const TITLE_CODE = 0;
     public function getData()
     {
         $data['categories'] = Category::getAll();
@@ -31,5 +31,8 @@ trait MainData
         return $data;
     }
 
-    abstract protected function getTitleCode();
+    protected function getTitleCode()
+    {
+        return static::TITLE_CODE;
+    }
 }

@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class Category extends Model
@@ -16,23 +15,20 @@ class Category extends Model
         return $categories;
     }
 
-    public static function createCategory(Request $request)
+    public static function createCategory($data)
     {
         $category = new Category();
-        $category->name = $request->get('name');
-        $category->description = $request->get('description');
+        $category->name = $data['name'];
+        $category->description = $data['description'];
         return $category->save();
     }
 
-    public static function editCategory(Request $request, $categoryId)
+    public static function editCategory($data, $categoryId)
     {
-        Category::find($categoryId)->update($request->all());
-    }
-
-    public static function getCategory($categoryId)
-    {
-        $category = DB::table('categories')->where('id', $categoryId)->first();
-        return $category;
+        $category = Category::find($categoryId);
+        $category->name = $data['name'];
+        $category->description = $data['description'];
+        return $category->save();
     }
 
     public static function getCategoryProducts($categoryId)

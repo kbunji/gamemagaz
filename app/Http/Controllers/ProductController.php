@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Product;
+use App\Services\FileHandler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class ProductController extends Controller
+class ProductController extends MainDataController
 {
-    use MainData;
     const TITLE_CODE = 2;
 
     public function manager()
     {
         $data = $this->getData();
-        return view('product.manager')->with($data);
+        return view('product.manager', $data);
     }
 
     public function all(Request $request)
@@ -22,7 +23,7 @@ class ProductController extends Controller
         $data = $this->getData();
         $products = $this->getCategoryProducts($categoryId);
         $data['products'] = $products;
-        return view('product.manager')->with($data);
+        return view('product.manager', $data);
     }
 
     protected function getCategoryProducts($categoryId)
@@ -36,15 +37,15 @@ class ProductController extends Controller
     public function get($productId)
     {
         $data = $this->getData();
-        $product = Product::getProduct($productId);
+        $product = Product::find($productId);
         $data['product'] = $product;
-        return view('product.product')->with($data);
+        return view('product.product', $data);
     }
 
     public function create()
     {
         $data = $this->getData();
-        return view('product.create')->with($data);
+        return view('product.create', $data);
     }
 
     protected function checkStoreRequest($request)
@@ -60,14 +61,18 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $this->checkStoreRequest($request);
-        Product::createProduct($request);
+        $data = $request->all();
+        $fileHandler = new FileHandler();
+        $file = $fileHandler->getRequestFile($request);
+        $userId = Auth::id();
+        Product::createProduct($data, $file, $userId);
         return redirect()->route('product.manager');
     }
 
     public function edit($productId)
     {
         $data = $this->getData();
-        $product = Product::getProduct($productId);
+        $product = Product::find($productId);
         $data['product'] = $product;
         return view('product.edit')->with($data);
     }
@@ -85,7 +90,12 @@ class ProductController extends Controller
     public function update($productId, Request $request)
     {
         $this->checkUpdateRequest($request);
-        Product::editProduct($request, $productId);
+        Product::findOrFail($productId);
+        $data = $request->all();
+        $fileHandler = new FileHandler();
+        $file = $fileHandler->getRequestFile($request);
+        $userId = Auth::id();
+        Product::editProduct($data, $productId, $file, $userId);
         return redirect()->route('product.manager');
     }
 
@@ -110,11 +120,5 @@ class ProductController extends Controller
         $searchProducts = Product::searchProduct($value);
         $data['searchProducts'] = $searchProducts;
         return view('product.search')->with($data);
-    }
-
-
-    protected function getTitleCode()
-    {
-        return self::TITLE_CODE;
     }
 }

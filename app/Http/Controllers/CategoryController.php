@@ -5,21 +5,20 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class CategoryController extends MainDataController
 {
-    use MainData;
     const TITLE_CODE = 4;
 
     public function manager()
     {
         $data = $this->getData();
-        return view('category.manager')->with($data);
+        return view('category.manager', $data);
     }
 
     public function create()
     {
         $data = $this->getData();
-        return view('category.create')->with($data);
+        return view('category.create', $data);
     }
 
     protected function checkStoreRequest($request)
@@ -33,16 +32,17 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         $this->checkStoreRequest($request);
-        Category::createCategory($request);
+        $data = $request->all();
+        Category::createCategory($data);
         return redirect()->route('category.manager');
     }
 
     public function edit($categoryId)
     {
         $data = $this->getData();
-        $category = Category::getCategory($categoryId);
+        $category = Category::find($categoryId);
         $data['cat'] = $category;
-        return view('category.edit')->with($data);
+        return view('category.edit', $data);
     }
 
     protected function checkUpdateRequest($request)
@@ -56,7 +56,9 @@ class CategoryController extends Controller
     public function update($categoryId, Request $request)
     {
         $this->checkUpdateRequest($request);
-        Category::editCategory($request, $categoryId);
+        $data = $request->all();
+        Category::findOrFail($categoryId);
+        Category::editCategory($data, $categoryId);
         return redirect()->route('category.manager');
     }
 
@@ -69,15 +71,10 @@ class CategoryController extends Controller
     public function get($categoryId)
     {
         $data = $this->getData();
-        $category = Category::getCategory($categoryId);
+        $category = Category::find($categoryId);
         $data['cat'] = $category;
         $categoryProducts = Category::getCategoryProducts($categoryId);
         $data['catProducts'] = $categoryProducts;
-        return view('category.category')->with($data);
-    }
-
-    protected function getTitleCode()
-    {
-        return self::TITLE_CODE;
+        return view('category.category', $data);
     }
 }

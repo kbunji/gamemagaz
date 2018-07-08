@@ -3,7 +3,6 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
@@ -22,9 +21,8 @@ class Order extends Model
         return $orders;
     }
 
-    public static function getUserActiveOrder()
+    public static function getUserActiveOrder($userId)
     {
-        $userId = Auth::id();
         $order = DB::table('orders')
             ->where('user_id', $userId)
             ->where('active', self::ORDER_CLIENT_STATUS)
@@ -46,14 +44,14 @@ class Order extends Model
         return $order;
     }
 
-    public static function createOrder(Request $request)
+    public static function createOrder($data, $userId)
     {
         $order = new Order();
-        $order->name = $request->get('name');
-        $order->email = $request->get('email');
-        $order->active = self::ORDER_CLIENT_STATUS;
-        $order->comments = $request->get('comments');
-        $order->user_id = Auth::id();
+        $order->name = $data['name'];
+        $order->email = $data['email'];
+        $order->active = static::ORDER_CLIENT_STATUS;
+        $order->comments = $data['comments'];
+        $order->user_id = $userId;
         $order->created_at = \Carbon\Carbon::now('Asia/Almaty')->toDateTimeString();
         $order->save();
         return $order;

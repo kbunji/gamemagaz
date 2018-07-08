@@ -3,17 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Post;
+use App\Services\FileHandler;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class PostController extends Controller
+class PostController extends MainDataController
 {
-    use MainData;
     const TITLE_CODE = 3;
 
     public function manager()
     {
         $data = $this->getData();
-        $allPosts = Post::getAll();
+        $allPosts = Post::orderBy('created_at', 'desc')->get();
         $data['posts'] = $allPosts;
         return view('post.manager')->with($data);
     }
@@ -36,7 +37,11 @@ class PostController extends Controller
     public function store(Request $request)
     {
         $this->checkStoreRequest($request);
-        Post::createPost($request);
+        $data = $request->all();
+        $fileHandler = new FileHandler();
+        $file = $fileHandler->getRequestFile($request);
+        $userId = Auth::id();
+        Post::createPost($data, $file, $userId);
         return redirect()->route('post.manager');
     }
 
@@ -45,7 +50,7 @@ class PostController extends Controller
         $data = $this->getData();
         $product = Post::getPost($postId);
         $data['post'] = $product;
-        return view('post.edit')->with($data);
+        return view('post.edit', $data);
     }
 
     protected function checkUpdateRequest($request)
@@ -59,7 +64,12 @@ class PostController extends Controller
     public function update($postId, Request $request)
     {
         $this->checkUpdateRequest($request);
-        Post::editPost($request, $postId);
+        Post::findOrFail($postId);
+        $data = $request->all();
+        $fileHandler = new FileHandler();
+        $file = $fileHandler->getRequestFile($request);
+        $userId = Auth::id();
+        Post::editPost($data, $postId, $file, $userId);
         return redirect()->route('post.manager');
     }
 
@@ -72,9 +82,9 @@ class PostController extends Controller
     public function all()
     {
         $data = $this->getData();
-        $allPosts = Post::getAll();
+        $allPosts = Post::orderBy('created_at', 'desc')->get();
         $data['posts'] = $allPosts;
-        return view('post.all')->with($data);
+        return view('post.all', $data);
     }
 
     public function get($postId)
@@ -82,11 +92,6 @@ class PostController extends Controller
         $data = $this->getData();
         $post = Post::getPost($postId);
         $data['post'] = $post;
-        return view('post.post')->with($data);
-    }
-
-    protected function getTitleCode()
-    {
-        return self::TITLE_CODE;
+        return view('post.post', $data);
     }
 }

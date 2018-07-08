@@ -6,7 +6,7 @@
  * Time: 10:16
  */
 
-namespace App;
+namespace App\Services;
 
 use Illuminate\Http\Request;
 use Intervention\Image\ImageManagerStatic as Image;
@@ -16,13 +16,14 @@ class FileHandler
     public function loadFile($file, $path)
     {
         $img = Image::make($file)->resize(300, 300)->save($path);
+        return $img;
     }
 
-    public function hasRequestFile(Request $request)
+    public function getRequestFile(Request $request)
     {
         if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
-            return true;
+            $file = $request->file('photo');
+            return $file;
         }
-        return false;
     }
 }

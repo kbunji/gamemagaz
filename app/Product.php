@@ -2,57 +2,56 @@
 
 namespace App;
 
+use App\Services\FileHandler;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class Product extends Model
 {
     public $timestamps = true;
 
+    const PAGINATE_PRODUCTS = 6;
+
     protected $guarded = ['id'];
 
-    public static function createProduct(Request $request)
+    public static function createProduct($data, $file, $userId)
     {
         $fileName = null;
         $fileHandler = new FileHandler();
-        if ($fileHandler->hasRequestFile($request)) {
-            $file = $request->file('photo');
-            $fileName = Auth::id() . '_' . time() . '_' . $file->getClientOriginalName();
+        if ($file != null) {
+            $fileName = $userId . '_' . time() . '_' . $file->getClientOriginalName();
             $path = public_path('img/cover/' . $fileName);
             $fileHandler->loadFile($file, $path);
         }
         $product = new Product();
-        $product->name = $request->get('name');
-        $product->price = $request->get('price');
+        $product->name = $data['name'];
+        $product->price = $data['price'];
         if ($fileName != null) {
             $product->photo = $fileName;
         }
-        $product->description = $request->get('description');
-        $product->category_id = $request->get('categoryId');
+        $product->description = $data['description'];
+        $product->category_id = $data['categoryId'];
         $product->created_at = \Carbon\Carbon::now('Asia/Almaty')->toDateTimeString();
         return $product->save();
     }
 
-    public static function editProduct(Request $request, $productId)
+    public static function editProduct($data, $productId, $file, $userId)
     {
         $fileName = null;
         $fileHandler = new FileHandler();
-        if ($fileHandler->hasRequestFile($request)) {
-            $file = $request->file('photo');
-            $fileName = Auth::id() . '_' . time() . '_' . $file->getClientOriginalName();
+        if ($file != null) {
+            $fileName = $userId . '_' . time() . '_' . $file->getClientOriginalName();
             $path = public_path('img/cover/' . $fileName);
             $fileHandler->loadFile($file, $path);
         }
         $product = Product::find($productId);
-        $product->name = $request->get('name');
-        $product->price = $request->get('price');
+        $product->name = $data['name'];
+        $product->price = $data['price'];
         if ($fileName != null) {
             $product->photo = $fileName;
         }
-        $product->description = $request->get('description');
-        $product->category_id = $request->get('categoryId');
+        $product->description = $data['description'];
+        $product->category_id = $data['categoryId'];
         $product->updated_at = \Carbon\Carbon::now('Asia/Almaty')->toDateTimeString();
         return $product->save();
     }
@@ -76,19 +75,13 @@ class Product extends Model
 
     public static function getLastProducts()
     {
-        $posts = DB::table('products')->orderBy('created_at', 'desc')->paginate(6);
+        $posts = DB::table('products')->orderBy('created_at', 'desc')->paginate(static::PAGINATE_PRODUCTS);
         return $posts;
-    }
-
-    public static function getProduct($productId)
-    {
-        $product = DB::table('products')->where('id', $productId)->first();
-        return $product;
     }
 
     public static function searchProduct($value)
     {
-        $products = Product::where('name', 'LIKE', "%$value%")->paginate(6);
+        $products = Product::where('name', 'LIKE', "%$value%")->paginate(static::PAGINATE_PRODUCTS);
         return $products;
     }
 }

@@ -7,15 +7,16 @@ use App\Order;
 use App\OrderDetail;
 use App\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
-class OrderController extends Controller
+class OrderController extends MainDataController
 {
-    use MainData;
     const TITLE_CODE = 5;
 
     public function manager($productId)
     {
-        $order = Order::getUserActiveOrder();
+        $userId = Auth::id();
+        $order = Order::getUserActiveOrder($userId);
         if ($order) {
             return $this->addOrderDetails($productId, $order);
         }
@@ -26,17 +27,17 @@ class OrderController extends Controller
     {
         $data = $this->getData();
         $data['products'] = Product::getLastProducts();
-        $data['prod'] = Product::getProduct($productId);
+        $data['prod'] = Product::find($productId);
         $data['order'] = $order;
-        return view('order.continue')->with($data);
+        return view('order.continue', $data);
     }
 
     protected function createOrder($productId)
     {
         $data = $this->getData();
         $data['products'] = Product::getLastProducts();
-        $data['prod'] = Product::getProduct($productId);
-        return view('order.create')->with($data);
+        $data['prod'] = Product::find($productId);
+        return view('order.create', $data);
     }
 
     protected function checkStoreRequest($request)
@@ -52,8 +53,10 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $this->checkStoreRequest($request);
-        $order = Order::createOrder($request);
-        OrderDetail::createOrderDetails($request, $order);
+        $data = $request->all();
+        $userId = Auth::id();
+        $order = Order::createOrder($data, $userId);
+        OrderDetail::createOrderDetails($data, $order);
         return redirect()->route('web.index');
     }
 
@@ -69,19 +72,21 @@ class OrderController extends Controller
     public function add(Request $request)
     {
         $this->checkAddRequest($request);
-        OrderDetail::addOrderDetails($request);
+        $data = $request->all();
+        OrderDetail::addOrderDetails($data);
         return redirect()->route('web.index');
     }
 
     public function my()
     {
         $data = $this->getData();
-        $orderActive = Order::getUserActiveOrder();
+        $userId = Auth::id();
+        $orderActive = Order::getUserActiveOrder($userId);
         if ($orderActive) {
             $data['orderActive'] = $orderActive;
             $data['orderDetails'] = OrderDetail::getOrderDetails($orderActive->id);
         }
-        return view('order.my')->with($data);
+        return view('order.my', $data);
     }
 
     public function close($orderId)
@@ -89,25 +94,20 @@ class OrderController extends Controller
         $data = $this->getData();
         Order::closeActiveOrder($orderId);
         event(new OrderClosedEvent($orderId));
-        return view('order.my')->with($data);
+        return view('order.my', $data);
     }
 
     public function all()
     {
         $data = $this->getData();
         $data['adminOrders'] = Order::getOrdersForAdmin();
-        return view('order.all')->with($data);
+        return view('order.all', $data);
     }
 
     public function details($orderId)
     {
         $data = $this->getData();
         $data['orderDetails'] = OrderDetail::getOrderDetails($orderId);
-        return view('order.details')->with($data);
-    }
-
-    protected function getTitleCode()
-    {
-        return self::TITLE_CODE;
+        return view('order.details', $data);
     }
 }
