@@ -1,5 +1,7 @@
 @extends('admin.app')
-
+@section('admin-title')
+    Просмотр заказов
+@endsection
 @section('main-content')
     <h3>Заказы</h3>
     <table class="table">

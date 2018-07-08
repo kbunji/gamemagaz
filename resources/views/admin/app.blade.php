@@ -95,19 +95,7 @@
                 <div class="content-head__container">
                     <div class="content-head__title-wrap">
                         <div class="content-head__title-wrap__title bcg-title">
-                            @if($title == 0)
-                                Админ панель
-                            @elseif($title == 2)
-                                Управление товарами
-                            @elseif($title == 3)
-                                Новости
-                            @elseif($title == 4)
-                                Управление категориями
-                            @elseif($title == 5)
-                                Просмотр заказов
-                            @elseif($title == 6)
-                                Уведомления
-                            @endif
+                            @yield('admin-title')
                         </div>
                     </div>
                 </div>

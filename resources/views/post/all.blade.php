@@ -1,5 +1,7 @@
 @extends('app')
-
+@section('title')
+    Новости
+@endsection
 @section('main-content')
     <div class="content-main__container">
             <div class="news-block content-text">

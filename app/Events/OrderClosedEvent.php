@@ -32,7 +32,7 @@ class OrderClosedEvent
             'orderId' => $orderId,
             'orderDetails' => OrderDetail::getOrderDetails($orderId)
         ];
-        $emails = OrderNotification::getEmails();
+        $emails = OrderNotification::all();
         Mail::to($emails)->send(new \App\Mail\newOrder($data));
     }
 

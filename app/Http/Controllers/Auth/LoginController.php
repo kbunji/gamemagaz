@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Http\Controllers\MainData;
 use App\Product;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 
@@ -21,8 +20,6 @@ class LoginController extends Controller
     */
 
     use AuthenticatesUsers;
-    use MainData;
-    const TITLE_CODE = 1;
 
     /**
      * Where to redirect users after login.
@@ -43,13 +40,7 @@ class LoginController extends Controller
 
     public function showLoginForm()
     {
-        $data = $this->getData();
         $data['products'] = Product::getLastProducts();
         return view('auth.login')->with($data);
-    }
-
-    protected function getTitleCode()
-    {
-        // TODO: Implement getTitleCode() method.
     }
 }

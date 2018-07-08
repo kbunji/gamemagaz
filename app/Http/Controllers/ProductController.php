@@ -7,20 +7,16 @@ use App\Services\FileHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class ProductController extends MainDataController
+class ProductController extends Controller
 {
-    const TITLE_CODE = 2;
-
     public function manager()
     {
-        $data = $this->getData();
-        return view('product.manager', $data);
+        return view('product.manager');
     }
 
     public function all(Request $request)
     {
         $categoryId = $request->get('categoryId');
-        $data = $this->getData();
         $products = $this->getCategoryProducts($categoryId);
         $data['products'] = $products;
         return view('product.manager', $data);
@@ -36,7 +32,6 @@ class ProductController extends MainDataController
 
     public function get($productId)
     {
-        $data = $this->getData();
         $product = Product::find($productId);
         $data['product'] = $product;
         return view('product.product', $data);
@@ -44,17 +39,16 @@ class ProductController extends MainDataController
 
     public function create()
     {
-        $data = $this->getData();
-        return view('product.create', $data);
+        return view('product.create');
     }
 
     protected function checkStoreRequest($request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name' => 'required|string',
             'price' => 'required|integer',
-            'description' => 'required',
-            'categoryId' => 'required',
+            'description' => 'required|string',
+            'categoryId' => 'required|integer',
         ]);
     }
 
@@ -71,19 +65,18 @@ class ProductController extends MainDataController
 
     public function edit($productId)
     {
-        $data = $this->getData();
         $product = Product::find($productId);
         $data['product'] = $product;
-        return view('product.edit')->with($data);
+        return view('product.edit', $data);
     }
 
     protected function checkUpdateRequest($request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name' => 'required|string',
             'price' => 'required|integer',
-            'description' => 'required',
-            'categoryId' => 'required',
+            'description' => 'required|string',
+            'categoryId' => 'required|integer',
         ]);
     }
 
@@ -114,7 +107,6 @@ class ProductController extends MainDataController
 
     public function search(Request $request)
     {
-        $data = $this->getData();
         $this->checkSearchRequest($request);
         $value = $request->get('search');
         $searchProducts = Product::searchProduct($value);

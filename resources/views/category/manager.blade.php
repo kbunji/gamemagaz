@@ -1,5 +1,7 @@
 @extends('admin.app')
-
+@section('admin-title')
+    Управление категориями
+@endsection
 @section('main-content')
     <p class="nav-list__item"><a href="{{ route('category.create') }}"
                                   class="nav-list__item__link">Создать новую категорию</a></p>

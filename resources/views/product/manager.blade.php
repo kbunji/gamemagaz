@@ -1,5 +1,7 @@
 @extends('admin.app')
-
+@section('admin-title')
+    Управление товарами
+@endsection
 @section('main-content')
 
     <div class="nav-list__item"><a href="{{ route('product.create') }}"

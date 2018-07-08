@@ -5,27 +5,24 @@ namespace App\Http\Controllers;
 use App\Category;
 use Illuminate\Http\Request;
 
-class CategoryController extends MainDataController
+class CategoryController extends Controller
 {
-    const TITLE_CODE = 4;
 
     public function manager()
     {
-        $data = $this->getData();
-        return view('category.manager', $data);
+        return view('category.manager');
     }
 
     public function create()
     {
-        $data = $this->getData();
-        return view('category.create', $data);
+        return view('category.create');
     }
 
     protected function checkStoreRequest($request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required'
+            'name' => 'required:string',
+            'description' => 'required:string'
         ]);
     }
 
@@ -39,17 +36,15 @@ class CategoryController extends MainDataController
 
     public function edit($categoryId)
     {
-        $data = $this->getData();
         $category = Category::find($categoryId);
-        $data['cat'] = $category;
-        return view('category.edit', $data);
+        return view('category.edit', ['cat' => $category]);
     }
 
     protected function checkUpdateRequest($request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'description' => 'required'
+            'name' => 'required:string',
+            'description' => 'required:string'
         ]);
     }
 
@@ -70,7 +65,6 @@ class CategoryController extends MainDataController
 
     public function get($categoryId)
     {
-        $data = $this->getData();
         $category = Category::find($categoryId);
         $data['cat'] = $category;
         $categoryProducts = Category::getCategoryProducts($categoryId);

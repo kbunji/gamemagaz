@@ -1,5 +1,7 @@
 @extends('admin.app')
-
+@section('admin-title')
+    Управление уведомлениями
+@endsection
 @section('main-content')
     <p class="nav-list__item"><a href="{{ route('notification.add') }}"
                                  class="nav-list__item__link">Добавить получателя</a></p>

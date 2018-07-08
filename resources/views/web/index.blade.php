@@ -1,5 +1,7 @@
 @extends('app')
-
+@section('title')
+    Последние товары
+@endsection
 @section('main-content')
     <div class="content-main__container">
         <div class="products-columns">
@@ -19,7 +21,8 @@
                     </div>
                     <div class="products-columns__item__description">
                         <span class="products-price">{{ $product->price }} руб</span>
-                        <a href="{{route('order.manager', ['productId' => $product->id])}}" class="btn btn-blue">Купить</a>
+                        <a href="{{route('order.manager', ['productId' => $product->id])}}"
+                           class="btn btn-blue">Купить</a>
                     </div>
                 </div>
             @endforeach

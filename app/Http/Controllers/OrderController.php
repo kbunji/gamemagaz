@@ -9,10 +9,8 @@ use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class OrderController extends MainDataController
+class OrderController extends Controller
 {
-    const TITLE_CODE = 5;
-
     public function manager($productId)
     {
         $userId = Auth::id();
@@ -25,7 +23,6 @@ class OrderController extends MainDataController
 
     protected function addOrderDetails($productId, $order)
     {
-        $data = $this->getData();
         $data['products'] = Product::getLastProducts();
         $data['prod'] = Product::find($productId);
         $data['order'] = $order;
@@ -34,7 +31,6 @@ class OrderController extends MainDataController
 
     protected function createOrder($productId)
     {
-        $data = $this->getData();
         $data['products'] = Product::getLastProducts();
         $data['prod'] = Product::find($productId);
         return view('order.create', $data);
@@ -43,10 +39,10 @@ class OrderController extends MainDataController
     protected function checkStoreRequest($request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'email' => 'required',
-            'productId' => 'required',
-            'quantity' => 'required'
+            'name' => 'required|string',
+            'email' => 'required|string',
+            'productId' => 'required|integer',
+            'quantity' => 'required|integer'
         ]);
     }
 
@@ -63,9 +59,9 @@ class OrderController extends MainDataController
     protected function checkAddRequest($request)
     {
         $this->validate($request, [
-            'orderId' => 'required',
-            'productId' => 'required',
-            'quantity' => 'required'
+            'orderId' => 'required|integer',
+            'productId' => 'required|integer',
+            'quantity' => 'required|integer'
         ]);
     }
 
@@ -79,7 +75,7 @@ class OrderController extends MainDataController
 
     public function my()
     {
-        $data = $this->getData();
+        $data = array();
         $userId = Auth::id();
         $orderActive = Order::getUserActiveOrder($userId);
         if ($orderActive) {
@@ -91,22 +87,19 @@ class OrderController extends MainDataController
 
     public function close($orderId)
     {
-        $data = $this->getData();
         Order::closeActiveOrder($orderId);
         event(new OrderClosedEvent($orderId));
-        return view('order.my', $data);
+        return view('order.my');
     }
 
     public function all()
     {
-        $data = $this->getData();
         $data['adminOrders'] = Order::getOrdersForAdmin();
         return view('order.all', $data);
     }
 
     public function details($orderId)
     {
-        $data = $this->getData();
         $data['orderDetails'] = OrderDetail::getOrderDetails($orderId);
         return view('order.details', $data);
     }

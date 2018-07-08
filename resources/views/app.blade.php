@@ -55,7 +55,7 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                @if (Auth::user()->role == 'admin')
+                                @if (Auth::user()->isAdmin())
                                     <a class="dropdown-item" href="{{ route('admin') }}">
                                         Админ панель
                                     </a>
@@ -125,17 +125,18 @@
                 <div class="content-head__container">
                     <div class="content-head__title-wrap">
                         <div class="content-head__title-wrap__title bcg-title">
-                            @if($title == 1)
-                                Последние товары
-                            @elseif($title == 2)
-                                {{ $product->name }}
-                            @elseif($title == 3)
-                                Новости
-                            @elseif($title == 4)
-                                Товары категории {{ $cat->name }}
-                            @elseif($title == 5)
-                                Мой заказ
-                            @endif
+                            @yield('title')
+                            {{--@if($base->title == 1)--}}
+                                {{--Последние товары--}}
+                            {{--@elseif($base->title == 2)--}}
+                                {{--{{ $product->name }}--}}
+                            {{--@elseif($base->title == 3)--}}
+                                {{--Новости--}}
+                            {{--@elseif($base->title == 4)--}}
+                                {{--Товары категории {{ $cat->name }}--}}
+                            {{--@elseif($base->title == 5)--}}
+                                {{--Мой заказ--}}
+                            {{--@endif--}}
                         </div>
                     </div>
                     <div class="content-head__search-block">

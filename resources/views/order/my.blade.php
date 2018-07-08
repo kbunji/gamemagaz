@@ -1,5 +1,7 @@
 @extends('app')
-
+@section('title')
+    Мой заказ
+@endsection
 @section('main-content')
     @if (isset($orderActive))
         <div class="nav-list__item"><a href="{{ route('order.close', ['orderId' => $orderActive->id]) }}"

@@ -1,5 +1,7 @@
 @extends('admin.app')
-
+@section('admin-title')
+    Управление новостями
+@endsection
 @section('main-content')
     <li class="nav-list__item"><a href="{{ route('post.create') }}"
                                   class="nav-list__item__link">Создать новость</a></li>

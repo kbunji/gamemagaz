@@ -7,30 +7,25 @@ use App\Services\FileHandler;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class PostController extends MainDataController
+class PostController extends Controller
 {
-    const TITLE_CODE = 3;
-
     public function manager()
     {
-        $data = $this->getData();
         $allPosts = Post::orderBy('created_at', 'desc')->get();
-        $data['posts'] = $allPosts;
-        return view('post.manager')->with($data);
+        return view('post.manager', ['posts' => $allPosts]);
     }
 
     public function create()
     {
-        $data = $this->getData();
-        return view('post.create')->with($data);
+        return view('post.create');
     }
 
     protected function checkStoreRequest($request)
     {
         $this->validate($request, [
-            'title' => 'required',
+            'title' => 'required|string',
             'photo' => 'required',
-            'description' => 'required'
+            'description' => 'required|string'
         ]);
     }
 
@@ -47,7 +42,6 @@ class PostController extends MainDataController
 
     public function edit($postId)
     {
-        $data = $this->getData();
         $product = Post::getPost($postId);
         $data['post'] = $product;
         return view('post.edit', $data);
@@ -56,8 +50,8 @@ class PostController extends MainDataController
     protected function checkUpdateRequest($request)
     {
         $this->validate($request, [
-            'title' => 'required',
-            'description' => 'required'
+            'title' => 'required|string',
+            'description' => 'required|string'
         ]);
     }
 
@@ -81,7 +75,6 @@ class PostController extends MainDataController
 
     public function all()
     {
-        $data = $this->getData();
         $allPosts = Post::orderBy('created_at', 'desc')->get();
         $data['posts'] = $allPosts;
         return view('post.all', $data);
@@ -89,7 +82,6 @@ class PostController extends MainDataController
 
     public function get($postId)
     {
-        $data = $this->getData();
         $post = Post::getPost($postId);
         $data['post'] = $post;
         return view('post.post', $data);

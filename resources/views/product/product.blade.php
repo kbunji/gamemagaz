@@ -1,5 +1,7 @@
 @extends('app')
-
+@section('title')
+    {{ $product->name }}
+@endsection
 @section('main-content')
     <div class="content-main__container">
         <div class="product-container">

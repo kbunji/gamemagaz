@@ -2,17 +2,13 @@
 
 namespace App\Mail;
 
-use App\Http\Controllers\MainData;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class newOrder extends Mailable
 {
     use Queueable, SerializesModels;
-    use MainData;
-    const TITLE_CODE = 1;
     protected $data;
 
     /**
@@ -33,10 +29,5 @@ class newOrder extends Mailable
     public function build()
     {
         return $this->view('notification.email')->with($this->data);
-    }
-
-    protected function getTitleCode()
-    {
-        self::TITLE_CODE;
     }
 }

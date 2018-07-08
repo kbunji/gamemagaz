@@ -2,11 +2,9 @@
 
 namespace App\Http\Controllers\Auth;
 
-use App\Http\Controllers\MainData;
 use App\Product;
 use App\User;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
@@ -23,10 +21,7 @@ class RegisterController extends Controller
     | provide this functionality without requiring any additional code.
     |
     */
-    use MainData;
     use RegistersUsers;
-
-    const TITLE_CODE = 1;
 
     /**
      * Where to redirect users after registration.
@@ -52,7 +47,6 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm()
     {
-        $data = $this->getData();
         $data['products'] = Product::getLastProducts();
         return view('auth.register')->with($data);
     }
@@ -100,10 +94,5 @@ class RegisterController extends Controller
             return false;
         }
         return true;
-    }
-
-    protected function getTitleCode()
-    {
-        return self::TITLE_CODE;
     }
 }
