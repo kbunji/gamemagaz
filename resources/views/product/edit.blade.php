@@ -5,8 +5,8 @@
     <form action="{{ route('product.update', ['productId' => $product->id]) }}" method="post" enctype="multipart/form-data">
         {{csrf_field()}}
         <div class="form-group">
-            <label for="categoryId">Изменить категорию товаров</label>
-            <select id="category-show" name="categoryId" class="form-control" id="categoryId">
+            <label for="category_id">Изменить категорию товаров</label>
+            <select id="category_id" name="category_id" class="form-control">
                 <option value="{{ $product->category_id }}">Не изменять</option>
                 @foreach($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>

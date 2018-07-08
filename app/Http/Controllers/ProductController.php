@@ -76,19 +76,19 @@ class ProductController extends Controller
             'name' => 'required|string',
             'price' => 'required|integer',
             'description' => 'required|string',
-            'categoryId' => 'required|integer',
+            'category_id' => 'required|integer',
         ]);
     }
 
     public function update($productId, Request $request)
     {
         $this->checkUpdateRequest($request);
-        Product::findOrFail($productId);
+        $product = Product::findOrFail($productId);
         $data = $request->all();
         $fileHandler = new FileHandler();
         $file = $fileHandler->getRequestFile($request);
         $userId = Auth::id();
-        Product::editProduct($data, $productId, $file, $userId);
+        Product::editProduct($data, $product, $file, $userId);
         return redirect()->route('product.manager');
     }
 

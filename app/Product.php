@@ -16,44 +16,32 @@ class Product extends Model
 
     public static function createProduct($data, $file, $userId)
     {
-        $fileName = null;
-        $fileHandler = new FileHandler();
+        $product = new Product();
         if ($file != null) {
+            $fileHandler = new FileHandler();
             $fileName = $userId . '_' . time() . '_' . $file->getClientOriginalName();
             $path = public_path('img/cover/' . $fileName);
             $fileHandler->loadFile($file, $path);
-        }
-        $product = new Product();
-        $product->name = $data['name'];
-        $product->price = $data['price'];
-        if ($fileName != null) {
             $product->photo = $fileName;
         }
+        $product->name = $data['name'];
+        $product->price = $data['price'];
         $product->description = $data['description'];
         $product->category_id = $data['categoryId'];
         $product->created_at = \Carbon\Carbon::now('Asia/Almaty')->toDateTimeString();
         return $product->save();
     }
 
-    public static function editProduct($data, $productId, $file, $userId)
+    public static function editProduct($data, $product, $file, $userId)
     {
-        $fileName = null;
-        $fileHandler = new FileHandler();
         if ($file != null) {
+            $fileHandler = new FileHandler();
             $fileName = $userId . '_' . time() . '_' . $file->getClientOriginalName();
             $path = public_path('img/cover/' . $fileName);
             $fileHandler->loadFile($file, $path);
+            $data['photo'] = $fileName;
         }
-        $product = Product::find($productId);
-        $product->name = $data['name'];
-        $product->price = $data['price'];
-        if ($fileName != null) {
-            $product->photo = $fileName;
-        }
-        $product->description = $data['description'];
-        $product->category_id = $data['categoryId'];
-        $product->updated_at = \Carbon\Carbon::now('Asia/Almaty')->toDateTimeString();
-        return $product->save();
+        return $product->update($data);
     }
 
     public static function getAll()

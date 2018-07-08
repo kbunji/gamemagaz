@@ -25,23 +25,16 @@ class Post extends Model
         return $post->save();
     }
 
-    public static function editPost($data, $postId, $file, $userId)
+    public static function editPost($data, $post, $file, $userId)
     {
-        $fileName = null;
-        $fileHandler = new FileHandler();
         if ($file != null) {
+            $fileHandler = new FileHandler();
             $fileName = $userId . '_' . time() . '_' . $file->getClientOriginalName();
             $path = public_path('img/news/' . $fileName);
             $fileHandler->loadFile($file, $path);
+            $data['photo'] = $fileName;
         }
-        $post = Post::find($postId);
-        $post->title = $data['title'];
-        if ($fileName != null) {
-            $post->photo = $fileName;
-        }
-        $post->description = $data['description'];
-        $post->updated_at = \Carbon\Carbon::now('Asia/Almaty')->toDateTimeString();
-        return $post->save();
+        return $post->update($data);
     }
 
     public static function getLastPosts()

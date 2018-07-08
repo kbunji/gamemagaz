@@ -58,12 +58,12 @@ class PostController extends Controller
     public function update($postId, Request $request)
     {
         $this->checkUpdateRequest($request);
-        Post::findOrFail($postId);
+        $post = Post::findOrFail($postId);
         $data = $request->all();
         $fileHandler = new FileHandler();
         $file = $fileHandler->getRequestFile($request);
         $userId = Auth::id();
-        Post::editPost($data, $postId, $file, $userId);
+        Post::editPost($data, $post, $file, $userId);
         return redirect()->route('post.manager');
     }
 
