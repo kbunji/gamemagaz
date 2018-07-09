@@ -1,5 +1,4 @@
 @extends('app')
-{{--@extends ('web.index')--}}
 
 @section('register')
     <div class="popup" id="myPopup">
