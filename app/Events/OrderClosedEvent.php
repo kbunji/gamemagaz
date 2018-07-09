@@ -2,16 +2,14 @@
 
 namespace App\Events;
 
+use App\Mail\NewOrder;
 use App\OrderDetail;
 use App\OrderNotification;
 use App\User;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
@@ -33,7 +31,7 @@ class OrderClosedEvent
             'orderDetails' => OrderDetail::getOrderDetails($orderId)
         ];
         $emails = OrderNotification::all();
-        Mail::to($emails)->send(new \App\Mail\newOrder($data));
+        Mail::to($emails)->send(new NewOrder($data));
     }
 
     /**

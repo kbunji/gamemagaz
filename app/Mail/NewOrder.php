@@ -6,7 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
-class newOrder extends Mailable
+class NewOrder extends Mailable
 {
     use Queueable, SerializesModels;
     protected $data;
